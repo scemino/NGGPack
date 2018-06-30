@@ -1,0 +1,23 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2017
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NGGPack.Console", "NGGPack.Console\NGGPack.Console.csproj", "{1D5098DB-F742-4D91-A643-0899E1C4FCBB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NGGPack", "NGGPack\NGGPack.csproj", "{B1DFE26D-33E4-4F3D-9B6B-380FB9B8BC0F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1D5098DB-F742-4D91-A643-0899E1C4FCBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D5098DB-F742-4D91-A643-0899E1C4FCBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D5098DB-F742-4D91-A643-0899E1C4FCBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D5098DB-F742-4D91-A643-0899E1C4FCBB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1DFE26D-33E4-4F3D-9B6B-380FB9B8BC0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1DFE26D-33E4-4F3D-9B6B-380FB9B8BC0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1DFE26D-33E4-4F3D-9B6B-380FB9B8BC0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1DFE26D-33E4-4F3D-9B6B-380FB9B8BC0F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
