@@ -6,6 +6,16 @@ This is a tool to list, view and extract files from **ggpack** data files used b
 
 You need to have donet core installed, you can get it here: https://www.microsoft.com/net/learn/get-started/
 
+## Asciinema
+
+List all **bnut** files starting with a 'B' and viewing the content of the first match.
+
+[![asciicast](https://asciinema.org/a/OjGpKHcBxh9Erb9ECWviyCp8O.png)](https://asciinema.org/a/OjGpKHcBxh9Erb9ECWviyCp8O)
+
+List all **png** files starting with a 'D' and extracting all of them
+
+[![asciicast](https://asciinema.org/a/9M4ekjvE3QDhMetrYWHDMVbQn.png)](https://asciinema.org/a/9M4ekjvE3QDhMetrYWHDMVbQn)
+
 ## Build & Run
 
 * First clone the project: `git clone https://github.com/scemino/NGGPack.git`
@@ -37,4 +47,4 @@ This project has been adapted from the awesome projects https://github.com/mrmac
 * Show the content of a file
 * Extract files from the ggpack
 * Dump **wimpy** files
-* Deobfuscate the bnut files
+* Deobfuscate the **bnut** files
