@@ -16,6 +16,10 @@ List all **png** files starting with a 'D' and extracting all of them
 
 [![asciicast](https://asciinema.org/a/9M4ekjvE3QDhMetrYWHDMVbQn.png)](https://asciinema.org/a/9M4ekjvE3QDhMetrYWHDMVbQn)
 
+Use the console GUI to explore a pack and view files content
+
+[![asciicast](https://asciinema.org/a/cxbgshzR55AK6OYW6Eai5ru2W.png)](https://asciinema.org/a/cxbgshzR55AK6OYW6Eai5ru2W)
+
 ## Build & Run
 
 * First clone the project: `git clone https://github.com/scemino/NGGPack.git`
@@ -35,6 +39,7 @@ List all **png** files starting with a 'D' and extracting all of them
         -x, --extract              extract files that match the pattern
         -c, --cat                  output content of the first file that match the
                                     pattern
+        -g, --gui                  use the GUI
         Example: NGGPack.Console ThimbleweedPark.ggpack1 B*.bnut
 
 ## Thanks
