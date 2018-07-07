@@ -1,4 +1,4 @@
-# NGGDump
+# NGGPack
 
 This is a tool to list, view and extract files from **ggpack** data files used by the [Thimbleweed Park](https://thimbleweedpark.com/) game, which is an awesome adventure game, go buy it right now, you won't regret it ([Steam](http://store.steampowered.com/app/569860/Thimbleweed_Park/), [GOG](https://www.gog.com/game/thimbleweed_park)).
 
