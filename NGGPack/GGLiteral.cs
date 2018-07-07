@@ -42,6 +42,7 @@ namespace NGGPack
             if (Value is string) { writer.WriteString((string)Value); return; }
             if (Value is int) { writer.WriteInt((int)Value); return; }
             if (Value is double) { writer.WriteDouble((double)Value); return; }
+            if (Value == null) { writer.WriteNull(); return; }
             throw new InvalidOperationException();
         }
     }

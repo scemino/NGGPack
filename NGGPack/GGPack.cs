@@ -36,7 +36,7 @@ namespace NGGPack
         private readonly Stream _stream;
         private List<GGPackEntry> _entries;
 
-        public IEnumerable<GGPackEntry> Entries => _entries;
+        public IList<GGPackEntry> Entries => _entries;
 
         public GGPack(GGHash directory, Stream stream)
         {

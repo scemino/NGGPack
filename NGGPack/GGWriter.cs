@@ -47,6 +47,7 @@ namespace NGGPack
         public abstract void WriteString(string value);
         public abstract void WriteInt(int value);
         public abstract void WriteDouble(double value);
+        public abstract void WriteNull();
 
         public abstract void WriteStartArray();
         public abstract void WriteArrayDelimiter();

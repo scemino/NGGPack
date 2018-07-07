@@ -110,6 +110,11 @@ namespace NGGPack
             _writer.Write(value);
         }
 
+        public override void WriteNull()
+        {
+            _writer.Write("null");
+        }
+
         public override void WriteString(string value)
         {
             _writer.Write('\"');
