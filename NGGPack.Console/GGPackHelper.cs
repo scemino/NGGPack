@@ -37,7 +37,8 @@ namespace NGGPack.Console
         Help,
         List,
         Cat,
-        Extract
+        Extract,
+        Gui
     }
 
     internal class GGPackHelper

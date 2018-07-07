@@ -24,7 +24,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-
 using System;
 using System.IO;
 using Mono.Options;
@@ -42,6 +41,7 @@ namespace NGGPack.Console
                 {"l|list", "list files that match the pattern", v => action = Action.List},
                 {"x|extract", "extract files that match the pattern", v => action = Action.Extract},
                 {"c|cat", "output content of the first file that match the pattern", v => action = Action.Cat},
+                {"g|gui", "use the GUI", v => action = Action.Gui},
             };
 
             var cmdArgs = p.Parse(args);
@@ -50,6 +50,12 @@ namespace NGGPack.Console
             if (action == Action.Help)
             {
                 ShowHelp(p);
+                return;
+            }
+            if (action == Action.Gui)
+            {
+                var gui = new GGPackGui();
+                gui.Show();
                 return;
             }
 
