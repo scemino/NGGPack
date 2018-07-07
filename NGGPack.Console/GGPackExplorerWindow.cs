@@ -72,6 +72,16 @@ namespace NGGPack.Console
                 _detailView.Text = "no preview";
                 return;
             }
+            if (string.Equals(Path.GetExtension(entry.Name), ".ogg", StringComparison.OrdinalIgnoreCase))
+            {
+                _detailView.Text = "no preview";
+                return;
+            }
+            if (string.Equals(Path.GetExtension(entry.Name), ".wav", StringComparison.OrdinalIgnoreCase))
+            {
+                _detailView.Text = "no preview";
+                return;
+            }
 
             if (string.Equals(Path.GetExtension(entry.Name), ".wimpy", StringComparison.OrdinalIgnoreCase))
             {
