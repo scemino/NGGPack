@@ -44,7 +44,6 @@ namespace NGGPack.Console
             Height = Dim.Fill();
 
             _pack = pack;
-            base.WantMousePositionReports = true;
 
             var entries = _pack.Entries.Select(e => e.Name).ToList();
             _listViewEntries = new ListView(entries)
@@ -85,8 +84,12 @@ namespace NGGPack.Console
 
             if (string.Equals(Path.GetExtension(entry.Name), ".wimpy", StringComparison.OrdinalIgnoreCase))
             {
-                var hash = new GGPackReader().ReadHash(_pack.GetEntryStream(entry.Name));
-                _detailView.Text = hash.ToString();
+                var sr = new BinaryReader(_pack.GetEntryStream(entry.Name));
+                using (var reader = new GGBinaryReader(sr))
+                {
+                    var hash = reader.ReadDirectory();
+                    _detailView.Text = hash.ToString();
+                }
                 return;
             }
 

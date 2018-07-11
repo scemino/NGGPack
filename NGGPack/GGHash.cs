@@ -24,17 +24,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace NGGPack
 {
-    public class GGHash : GGValue
+    public class GGHash : GGValue, IEnumerable<KeyValuePair<string, GGValue>>
     {
+        public GGHash()
+        {
+            Pairs = new Dictionary<string, GGValue>();
+        }
+
         public GGHash(Dictionary<string, GGValue> pairs)
         {
             Pairs = pairs;
+        }
+
+        public void Add(string key, GGValue value)
+        {
+            Pairs.Add(key, value);
         }
 
         public Dictionary<string, GGValue> Pairs { get; }
@@ -43,7 +53,7 @@ namespace NGGPack
 
         public override void WriteTo(GGWriter writer)
         {
-            writer.WriteStartHash();
+            writer.WriteStartHash(Pairs.Count);
             if (Pairs.Count > 0)
             {
                 foreach (var pair in Pairs.Take(Pairs.Count - 1))
@@ -58,5 +68,19 @@ namespace NGGPack
             }
             writer.WriteEndHash();
         }
+
+        public IEnumerator<KeyValuePair<string, GGValue>> GetEnumerator()
+        {
+            return Pairs.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return Pairs.GetEnumerator();
+        }
+    }
+
+    internal interface IEnumerable<T1, T2>
+    {
     }
 }

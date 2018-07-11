@@ -54,7 +54,7 @@ namespace NGGPack
             _stream.Position = entry.Offset;
             var buf = new byte[entry.Size];
             _stream.Read(buf, 0, entry.Size);
-            GGPackReader.DecodeUnbreakableXor(buf);
+            GGBinaryReader.DecodeUnbreakableXor(buf);
             var extension = Path.GetExtension(name);
             if (string.Equals(extension, ".bnut", System.StringComparison.OrdinalIgnoreCase))
             {

@@ -34,28 +34,34 @@ namespace NGGPack.Console
     {
         static void Main(string[] args)
         {
-            var action = Action.List;
-            var p = new OptionSet
+            var action = Action.Create;
+            var options = new OptionSet
             {
                 {"h|?|help", "show this help message and exit", v => action = Action.Help},
                 {"l|list", "list files that match the pattern", v => action = Action.List},
                 {"x|extract", "extract files that match the pattern", v => action = Action.Extract},
                 {"c|cat", "output content of the first file that match the pattern", v => action = Action.Cat},
-                {"g|gui", "use the GUI", v => action = Action.Gui},
+                {"g|gui", "use the GUI", v => action = Action.Gui}
             };
 
-            var cmdArgs = p.Parse(args);
-            if (cmdArgs.Count == 0) action = Action.Help;
+            var cmdArgs = options.Parse(args);
 
             if (action == Action.Help)
             {
-                ShowHelp(p);
+                GGPackHelper.ShowHelp(options);
                 return;
             }
             if (action == Action.Gui)
             {
-                var gui = new GGPackGui();
-                gui.Show();
+                GGPackHelper.ShowGui();
+                return;
+            }
+
+            if (cmdArgs.Count == 0) action = Action.Help;
+
+            if (action == Action.Create)
+            {
+                GGPackHelper.Create(cmdArgs);
                 return;
             }
 
@@ -89,14 +95,6 @@ namespace NGGPack.Console
             {
                 System.Console.Error.WriteLine(e.Message);
             }
-        }
-
-        private static void ShowHelp(OptionSet options)
-        {
-            System.Console.WriteLine("usage: NGGPack.Console [-h] [-l] [-c] ggpack_file search_pattern");
-            System.Console.WriteLine();
-            options.WriteOptionDescriptions(System.Console.Out);
-            System.Console.WriteLine("Example: NGGPack.Console ThimbleweedPark.ggpack1 B*.bnut");
         }
     }
 }

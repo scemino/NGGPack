@@ -64,7 +64,7 @@ namespace NGGPack
             _writer.Write(value);
         }
 
-        public override void WriteStartArray()
+        public override void WriteStartArray(int count)
         {
 
             _writer.Write("[");
@@ -91,7 +91,7 @@ namespace NGGPack
             _writer.Write(": ");
         }
 
-        public override void WriteStartHash()
+        public override void WriteStartHash(int numPairs)
         {
             _indent++;
             _writer.Write("{");

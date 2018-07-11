@@ -49,11 +49,11 @@ namespace NGGPack
         public abstract void WriteDouble(double value);
         public abstract void WriteNull();
 
-        public abstract void WriteStartArray();
+        public abstract void WriteStartArray(int count);
         public abstract void WriteArrayDelimiter();
         public abstract void WriteEndArray();
 
-        public abstract void WriteStartHash();
+        public abstract void WriteStartHash(int numPairs);
         public abstract void WriteEndHash();
         public abstract void WriteHashName(string key);
         public abstract void WriteHashDelimiter();

@@ -43,6 +43,11 @@ namespace NGGPack
             _items = new List<GGValue>(items);
         }
 
+        public GGArray(params GGValue[] items)
+        {
+            _items = new List<GGValue>(items);
+        }
+
         public IEnumerator GetEnumerator()
         {
             return _items.GetEnumerator();
@@ -53,9 +58,19 @@ namespace NGGPack
             return _items.GetEnumerator();
         }
 
+        public void Add(GGValue value)
+        {
+            _items.Add(value);
+        }
+
+        public void AddRange(IEnumerable<GGValue> values)
+        {
+            _items.AddRange(values);
+        }
+
         public override void WriteTo(GGWriter writer)
         {
-            writer.WriteStartArray();
+            writer.WriteStartArray(_items.Count);
             if (_items.Count > 0)
             {
                 for (int i = 0; i < _items.Count - 1; i++)

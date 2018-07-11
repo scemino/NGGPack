@@ -30,7 +30,17 @@ namespace NGGPack
 {
     public class GGLiteral : GGValue
     {
-        public GGLiteral(object value)
+        public GGLiteral(string value)
+        {
+            Value = value;
+        }
+
+        public GGLiteral(int value)
+        {
+            Value = value;
+        }
+
+        public GGLiteral(double value)
         {
             Value = value;
         }

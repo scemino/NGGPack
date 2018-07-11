@@ -40,7 +40,12 @@ Use the console GUI to explore a pack and view files content
         -c, --cat                  output content of the first file that match the
                                     pattern
         -g, --gui                  use the GUI
-        Example: NGGPack.Console ThimbleweedPark.ggpack1 B*.bnut
+        
+        Examples: 
+        - to list all bnut files starting with a 'B' from pack 'ThimbleweedPark.ggpack1'
+     NGGPack.Console -l ThimbleweedPark.ggpack1 B*.bnut
+        - to create a pack 'MyPack.ggpack1' with all files from the directory 'resources'
+     NGGPack.Console MyPack.ggpack1 resources/
 
 ## Thanks
 
@@ -53,3 +58,4 @@ This project has been adapted from the awesome projects https://github.com/mrmac
 * Extract files from the ggpack
 * Dump **wimpy** files
 * Deobfuscate the **bnut** files
+* Create a pack

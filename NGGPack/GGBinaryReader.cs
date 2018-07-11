@@ -32,30 +32,40 @@ using System.Linq;
 
 namespace NGGPack
 {
-    public class GGPackReader
+    public class GGBinaryReader: IDisposable
     {
         private int[] _plo;
         private static readonly byte[] _magicBytes = { 0x4F, 0xD0, 0xA0, 0xAC, 0x4A, 0x5B, 0xB9, 0xE5, 0x93, 0x79, 0x45, 0xA5, 0xC1, 0xCB, 0x31, 0x93 };
+        private BinaryReader _reader;
 
-        public GGPack ReadPack(Stream stream)
+        public GGBinaryReader(BinaryReader reader)
         {
-            var br = new BinaryReader(stream);
-            var dataOffset = br.ReadInt32();
-            var dataSize = br.ReadInt32();
-            stream.Seek(dataOffset, SeekOrigin.Begin);
-            var buf = br.ReadBytes(dataSize);
+            _reader = reader;
+        }
+
+        public void Dispose()
+        {
+            _reader.Dispose();
+        }
+
+        public GGPack ReadPack()
+        {
+            var dataOffset = _reader.ReadInt32();
+            var dataSize = _reader.ReadInt32();
+            _reader.BaseStream.Seek(dataOffset, SeekOrigin.Begin);
+            var buf = _reader.ReadBytes(dataSize);
             DecodeUnbreakableXor(buf);
-            return new GGPack(ReadHash(buf),stream);
+            return new GGPack(ReadDirectory(buf), _reader.BaseStream);
         }
 
-        public GGHash ReadHash(Stream stream)
+        public GGHash ReadDirectory()
         {
-            var buf = new byte[stream.Length - stream.Position];
-            stream.Read(buf, 0, buf.Length);
-            return ReadHash(buf);
+            var buf = new byte[_reader.BaseStream.Length - _reader.BaseStream.Position];
+            _reader.Read(buf, 0, buf.Length);
+            return ReadDirectory(buf);
         }
 
-        private GGHash ReadHash(byte[] buf)
+        private GGHash ReadDirectory(byte[] buf)
         {
             if (BitConverter.ToInt32(buf, 0) != 0x04030201)
                 throw new InvalidOperationException("GGPack directory signature incorrect: " + BitConverter.ToInt32(buf, 0));
@@ -87,6 +97,18 @@ namespace NGGPack
             {
                 var x = (byte)(buffer[i] ^ _magicBytes[i & 0xf] ^ (i * 0x6d));
                 buffer[i] = (byte)(x ^ previous);
+                previous = x;
+            }
+            return buffer;
+        }
+
+        public static byte[] EncodeUnbreakableXor(byte[] buffer)
+        {
+            var previous = buffer.Length & 0xff;
+            for (var i = 0; i < buffer.Length; i++)
+            {
+                var x = (byte)(buffer[i] ^ previous);
+                buffer[i] = (byte)(x ^ _magicBytes[i & 0xf] ^ (i * 0x6d));
                 previous = x;
             }
             return buffer;
@@ -153,27 +175,6 @@ namespace NGGPack
                 case 2:
                     // hash
                     return ReadHash(buf, ref off);
-                case 5:
-                case 6:
-                    {
-                        // int
-                        // double
-                        off++;
-                        var plo_idx_int = BitConverter.ToInt32(buf, off);
-                        off += 4;
-                        var num_str = ReadString(buf, plo_idx_int);
-                        if (type == 5) return new GGLiteral(int.Parse(num_str, CultureInfo.InvariantCulture));
-                        return new GGLiteral(double.Parse(num_str, CultureInfo.InvariantCulture));
-                    }
-                case 4:
-                    // string
-                    {
-                        off++;
-                        var plo_idx_int = BitConverter.ToInt32(buf, off);
-                        off += 4;
-                        var num_str = ReadString(buf, plo_idx_int);
-                        return new GGLiteral(num_str);
-                    }
                 case 3:
                     // array
                     {
@@ -189,6 +190,27 @@ namespace NGGPack
                             throw new InvalidOperationException("unterminated array");
                         off++;
                         return new GGArray(arr);
+                    }
+                case 4:
+                    // string
+                    {
+                        off++;
+                        var plo_idx_int = BitConverter.ToInt32(buf, off);
+                        off += 4;
+                        var num_str = ReadString(buf, plo_idx_int);
+                        return new GGLiteral(num_str);
+                    }
+                case 5:
+                case 6:
+                    {
+                        // int
+                        // double
+                        off++;
+                        var plo_idx_int = BitConverter.ToInt32(buf, off);
+                        off += 4;
+                        var num_str = ReadString(buf, plo_idx_int);
+                        if (type == 5) return new GGLiteral(int.Parse(num_str, CultureInfo.InvariantCulture));
+                        return new GGLiteral(double.Parse(num_str, CultureInfo.InvariantCulture));
                     }
                 default:
                     throw new NotImplementedException();

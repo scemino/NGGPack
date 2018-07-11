@@ -71,9 +71,12 @@ namespace NGGPack.Console
             try
             {
                 var fs = File.OpenRead(path);
-                var pack = new GGPackReader().ReadPack(fs);
-                var win = new GGPackExplorerWindow(pack);
-                Application.Top.Add(win);
+                using (var pbr = new GGBinaryReader(new BinaryReader(fs)))
+                {
+                    var pack = pbr.ReadPack();
+                    var win = new GGPackExplorerWindow(pack);
+                    Application.Top.Add(win);
+                }
             }
             catch (Exception)
             {

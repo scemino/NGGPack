@@ -29,6 +29,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Mono.Options;
 
 namespace NGGPack.Console
 {
@@ -38,18 +39,19 @@ namespace NGGPack.Console
         List,
         Cat,
         Extract,
+        Create,
         Gui
     }
 
     internal class GGPackHelper
     {
-        private GGPackReader _reader;
+        private GGBinaryReader _reader;
         private GGPack _pack;
 
         public GGPackHelper(Stream stream)
         {
-            _reader = new GGPackReader();
-            _pack = _reader.ReadPack(stream);
+            _reader = new GGBinaryReader(new BinaryReader(stream));
+            _pack = _reader.ReadPack();
         }
 
         public void List(List<string> cmdArgs)
@@ -60,6 +62,44 @@ namespace NGGPack.Console
                 if (!predicate(entry.Name)) continue;
                 System.Console.WriteLine($"{entry.Name}");
             }
+        }
+
+        public static void Create(List<string> cmdArgs)
+        {
+            if (!Directory.Exists(cmdArgs[1]))
+            {
+                System.Console.Error.WriteLine($"Directory '{cmdArgs[1]}' does not exist");
+                return;
+            }
+
+            string outputPath = cmdArgs[0];
+            var files = Directory.GetFiles(cmdArgs[1]);
+
+            using (var bw = new BinaryWriter(File.OpenWrite(outputPath)))
+            using (var pw = new GGPackWriter(bw))
+            {
+                pw.WriteFiles(files);
+            }
+        }
+
+        public static void ShowGui()
+        {
+            var gui = new GGPackGui();
+            gui.Show();
+        }
+
+        public static void ShowHelp(OptionSet options)
+        {
+            System.Console.WriteLine("usage: NGGPack.Console [-h] [-l] [-c] ggpack_file search_pattern");
+            System.Console.WriteLine("The default action is to create a pack from a directory");
+            System.Console.WriteLine();
+            options.WriteOptionDescriptions(System.Console.Out);
+            System.Console.WriteLine();
+            System.Console.WriteLine("Examples: ");
+            System.Console.WriteLine(" - to list all bnut files starting with a 'B' from pack 'ThimbleweedPark.ggpack1'");
+            System.Console.WriteLine("     NGGPack.Console -l ThimbleweedPark.ggpack1 B*.bnut");
+            System.Console.WriteLine(" - to create a pack 'MyPack.ggpack1' with all files from the directory 'resources'");
+            System.Console.WriteLine("     NGGPack.Console MyPack.ggpack1 resources/");
         }
 
         public void Cat(List<string> cmdArgs)
@@ -76,8 +116,11 @@ namespace NGGPack.Console
             if (ext == ".wimpy")
             {
                 var entryStream = _pack.GetEntryStream(entry.Name);
-                var values = _reader.ReadHash(entryStream);
-                System.Console.WriteLine(values);
+                using (var reader = new GGBinaryReader(new BinaryReader(entryStream)))
+                {
+                    var values = reader.ReadDirectory();
+                    System.Console.WriteLine(values);
+                }
             }
             else
             {
@@ -98,8 +141,11 @@ namespace NGGPack.Console
                 if (ext == ".wimpy")
                 {
                     var entryStream = _pack.GetEntryStream(entry.Name);
-                    var content = _reader.ReadHash(entryStream);
-                    File.WriteAllText(entry.Name, content.ToString());
+                    using (var reader = new GGBinaryReader(new BinaryReader(entryStream)))
+                    {
+                        var content = reader.ReadDirectory();
+                        File.WriteAllText(entry.Name, content.ToString());
+                    }
                 }
                 else
                 {
