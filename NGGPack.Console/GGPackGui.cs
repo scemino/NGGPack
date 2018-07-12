@@ -62,8 +62,11 @@ namespace NGGPack.Console
                 AllowedFileTypes = new string[] { ".ggpack1", ".ggpack2" }
             };
             Application.Run(dialog);
-            var path = Path.Combine(dialog.DirectoryPath.ToString(), dialog.FilePath.ToString());
-            OpenPack(path);
+            if (dialog.FilePaths.Count > 0)
+            {
+                var path = Path.Combine(dialog.DirectoryPath.ToString(), dialog.FilePath.ToString());
+                OpenPack(path);
+            }
         }
 
         private void OpenPack(string path)
