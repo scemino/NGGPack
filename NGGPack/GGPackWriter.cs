@@ -47,15 +47,17 @@ namespace NGGPack
 
         public GGPackWriter WriteFile(string path)
         {
-            var fs = File.OpenRead(path);
-            var hash = new GGHash
+            using (var fs = File.OpenRead(path))
             {
-                {"filename", new GGLiteral(Path.GetFileName(path))},
-                {"offset", new GGLiteral(_offset)},
-                {"size", new GGLiteral((int)fs.Length)},
-            };
-            _gFiles.Add(hash);
-            _offset += (int)fs.Length;
+                var hash = new GGHash
+                {
+                    {"filename", new GGLiteral(Path.GetFileName(path))},
+                    {"offset", new GGLiteral(_offset)},
+                    {"size", new GGLiteral((int)fs.Length)},
+                };
+                _gFiles.Add(hash);
+                _offset += (int)fs.Length;
+            }
 
             var data = File.ReadAllBytes(path);
             GGBinaryReader.EncodeUnbreakableXor(data);
