@@ -49,9 +49,14 @@ namespace NGGPack
         {
             using (var fs = File.OpenRead(path))
             {
+                var filename = Path.GetFileName(path);
+                if (string.Equals(Path.GetExtension(filename), ".nut", StringComparison.OrdinalIgnoreCase))
+                {
+                    filename = Path.ChangeExtension(filename, ".bnut");
+                }
                 var hash = new GGHash
                 {
-                    {"filename", new GGLiteral(Path.GetFileName(path))},
+                    {"filename", new GGLiteral(filename)},
                     {"offset", new GGLiteral(_offset)},
                     {"size", new GGLiteral((int)fs.Length)},
                 };
@@ -60,6 +65,7 @@ namespace NGGPack
             }
 
             var data = File.ReadAllBytes(path);
+            GGPack.DecryptBnut(data);
             GGBinaryReader.EncodeUnbreakableXor(data);
             _bw.Write(data);
 

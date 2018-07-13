@@ -63,7 +63,7 @@ namespace NGGPack
             return new MemoryStream(buf);
         }
 
-        private static void DecryptBnut(byte[] data)
+        internal static void DecryptBnut(byte[] data)
         {
             int cursor = data.Length & 0xff;
             for (int i = 0; i < data.Length; i++)
