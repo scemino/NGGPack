@@ -79,8 +79,4 @@ namespace NGGPack
             return Pairs.GetEnumerator();
         }
     }
-
-    internal interface IEnumerable<T1, T2>
-    {
-    }
 }

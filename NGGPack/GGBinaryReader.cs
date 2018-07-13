@@ -72,19 +72,8 @@ namespace NGGPack
 
             var tmp = BitConverter.ToInt32(buf, 4);
 
-            // read ptr list offset & point to first file name offset
-            var plo = BitConverter.ToInt32(buf, 8);
-            if (plo < 12 || plo >= buf.Length - 4)
-                throw new InvalidOperationException("GGPack plo out of range: " + plo);
-
-            if (buf[plo] != 7)
-            {
-                throw new InvalidOperationException("GGPack cannot find plo: " + plo);
-            }
-
-            plo++;
             // convert index ptr list to list of fname, offset, size values
-            _plo = GetOffsets(buf, plo).ToArray();
+            _plo = GetOffsets(buf).ToArray();
 
             var off = 12;
             return ReadHash(buf, ref off);
@@ -114,8 +103,20 @@ namespace NGGPack
             return buffer;
         }
 
-        private static IEnumerable<int> GetOffsets(byte[] buf, int plo)
+        private static IEnumerable<int> GetOffsets(byte[] buf)
         {
+            // read ptr list offset & point to first file name offset
+            var plo = BitConverter.ToInt32(buf, 8);
+            if (plo < 12 || plo >= buf.Length - 4)
+                throw new InvalidOperationException("GGPack plo out of range: " + plo);
+
+            if (buf[plo] != 7)
+            {
+                throw new InvalidOperationException("GGPack cannot find plo: " + plo);
+            }
+
+            plo++;
+
             while (BitConverter.ToUInt32(buf, plo) != 0xFFFFFFFF)
             {
                 var off = BitConverter.ToInt32(buf, plo);
