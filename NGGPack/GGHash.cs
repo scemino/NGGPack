@@ -24,13 +24,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace NGGPack
 {
-    public class GGHash : GGValue, IEnumerable<KeyValuePair<string, GGValue>>
+    public class GGHash : GGValue, IEnumerable<KeyValuePair<string, GGValue>>, IEquatable<GGHash>
     {
         public GGHash()
         {
@@ -77,6 +78,30 @@ namespace NGGPack
         IEnumerator IEnumerable.GetEnumerator()
         {
             return Pairs.GetEnumerator();
+        }
+
+        public bool Equals(GGHash other)
+        {
+            if (Pairs.Count != other.Pairs.Count) return false;
+            foreach (var pair in Pairs)
+            {
+                GGValue value;
+                if (!other.Pairs.TryGetValue(pair.Key, out value)) return false;
+                if (!Equals(pair.Value, value)) return false;
+            }
+            return true;
+        }
+
+        public override int GetHashCode()
+        {
+            return Pairs.Count;
+        }
+
+        public override bool Equals(object obj)
+        {
+            var other = obj as GGHash;
+            if (other == null) return false;
+            return Equals(other);
         }
     }
 }

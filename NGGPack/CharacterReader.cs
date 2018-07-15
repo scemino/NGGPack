@@ -1,5 +1,5 @@
 ﻿//
-// GGValue.cs
+// CharacterReader.cs
 //
 // Author:
 //       scemino <scemino74@gmail.com>
@@ -24,40 +24,45 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Globalization;
 using System.IO;
-using System.Text;
 
 namespace NGGPack
 {
-    public abstract class GGValue
+    public class CharacterReader
     {
-        public static explicit operator string(GGValue value)
+        private BinaryReader _reader;
+
+        public int Offset => (int)_reader.BaseStream.Position;
+
+        public bool IsAtEnd => Offset >= _reader.BaseStream.Length;
+
+        public CharacterReader(BinaryReader reader)
         {
-            return (string)((GGLiteral)value).Value;
+            _reader = reader;
         }
 
-        public static explicit operator int(GGValue value)
+        public char Read()
         {
-            return (int)((GGLiteral)value).Value;
+            if (IsAtEnd) return char.MaxValue;
+            return _reader.ReadChar();
         }
 
-        public static explicit operator double(GGValue value)
+        public char Peek()
         {
-            return (double)((GGLiteral)value).Value;
+            if (IsAtEnd) return char.MaxValue;
+            var c = _reader.ReadChar();
+            _reader.BaseStream.Position--;
+            return c;
         }
 
-        public abstract void WriteTo(GGWriter writer);
-
-        public override string ToString()
+        public string GetText(int startOffset, int length)
         {
-            var content = new StringBuilder();
-            using (var swriter = new StringWriter(content, CultureInfo.InvariantCulture))
-            using (var writer = new GGTextWriter(swriter))
-            {
-                WriteTo(writer);
-            }
-            return content.ToString();
+            var offset = Offset;
+            _reader.BaseStream.Position = startOffset;
+            var buf = new char[length];
+            _reader.Read(buf, 0, length);
+            _reader.BaseStream.Position = offset;
+            return new string(buf);
         }
     }
 }

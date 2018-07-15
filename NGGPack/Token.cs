@@ -1,5 +1,5 @@
 ﻿//
-// GGValue.cs
+// Token.cs
 //
 // Author:
 //       scemino <scemino74@gmail.com>
@@ -24,40 +24,41 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Globalization;
-using System.IO;
-using System.Text;
 
 namespace NGGPack
 {
-    public abstract class GGValue
+    public enum TokenId
     {
-        public static explicit operator string(GGValue value)
-        {
-            return (string)((GGLiteral)value).Value;
-        }
+        None,
+        Colon,
+        Comma,
+        OpenCurlyBrace,
+        CloseCurlyBrace,
+        OpenSquareBrace,
+        CloseSquareBrace,
+        Number,
+        Whitespace,
+        String,
+        Null
+    }
 
-        public static explicit operator int(GGValue value)
-        {
-            return (int)((GGLiteral)value).Value;
-        }
+    public class Token
+    {
+        public TokenId Id { get; }
+        public int StartOffset { get; }
+        public int EndOffset { get; }
+        public int Length => EndOffset - StartOffset;
 
-        public static explicit operator double(GGValue value)
+        public Token(TokenId id, int startOffset, int endOffset)
         {
-            return (double)((GGLiteral)value).Value;
+            Id = id;
+            StartOffset = startOffset;
+            EndOffset = endOffset;
         }
-
-        public abstract void WriteTo(GGWriter writer);
 
         public override string ToString()
         {
-            var content = new StringBuilder();
-            using (var swriter = new StringWriter(content, CultureInfo.InvariantCulture))
-            using (var writer = new GGTextWriter(swriter))
-            {
-                WriteTo(writer);
-            }
-            return content.ToString();
+            return $"{Id} [{StartOffset}-{EndOffset}]";
         }
     }
 }

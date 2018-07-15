@@ -47,9 +47,9 @@ namespace NGGPack
 
         public GGPackWriter WriteFile(string path)
         {
+            var filename = Path.GetFileName(path);
             using (var fs = File.OpenRead(path))
             {
-                var filename = Path.GetFileName(path);
                 if (string.Equals(Path.GetExtension(filename), ".nut", StringComparison.OrdinalIgnoreCase))
                 {
                     filename = Path.ChangeExtension(filename, ".bnut");
@@ -65,7 +65,24 @@ namespace NGGPack
             }
 
             var data = File.ReadAllBytes(path);
-            GGPack.DecryptBnut(data);
+            if (string.Equals(Path.GetExtension(filename), ".nut", StringComparison.OrdinalIgnoreCase))
+            {
+                GGPack.DecryptBnut(data);
+            }
+            else if (string.Equals(Path.GetExtension(filename), ".wimpy", StringComparison.OrdinalIgnoreCase))
+            {
+                GGHash hash;
+                using (var ms = new MemoryStream(data))
+                {
+                    var parser = new GGParser(ms);
+                    hash = parser.ParseHash();
+                }
+                using (var ms = new MemoryStream())
+                {
+                    hash.WriteTo(new GGBinaryWriter(new BinaryWriter(ms)));
+                    data = ms.ToArray();
+                }
+            }
             GGBinaryReader.EncodeUnbreakableXor(data);
             _bw.Write(data);
 

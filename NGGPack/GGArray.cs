@@ -24,12 +24,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
 namespace NGGPack
 {
-    public class GGArray : GGValue, IEnumerable<GGValue>
+    public class GGArray : GGValue, IEnumerable<GGValue>, IEquatable<GGArray>
     {
         private readonly List<GGValue> _items;
 
@@ -81,6 +82,28 @@ namespace NGGPack
                 _items[_items.Count - 1].WriteTo(writer);
             }
             writer.WriteEndArray();
+        }
+
+        public bool Equals(GGArray other)
+        {
+            if (_items.Count != other._items.Count) return false;
+            for (int i = 0; i < _items.Count; i++)
+            {
+                if (!Equals(_items[i], other._items[i])) return false;
+            }
+            return true;
+        }
+
+        public override int GetHashCode()
+        {
+            return _items.Count;
+        }
+
+        public override bool Equals(object obj)
+        {
+            var other = obj as GGArray;
+            if (other == null) return false;
+            return Equals(other);
         }
     }
 }
