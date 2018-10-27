@@ -82,7 +82,7 @@ namespace NGGPack.Console
                 return;
             }
 
-            if (string.Equals(Path.GetExtension(entry.Name), ".wimpy", StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(Path.GetExtension(entry.Name), ".wimpy", StringComparison.OrdinalIgnoreCase) || entry.Name.EndsWith("Animation.json", StringComparison.OrdinalIgnoreCase))
             {
                 var sr = new BinaryReader(_pack.GetEntryStream(entry.Name));
                 using (var reader = new GGBinaryReader(sr))

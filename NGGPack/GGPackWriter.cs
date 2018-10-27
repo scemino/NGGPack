@@ -77,11 +77,14 @@ namespace NGGPack
                     var parser = new GGParser(ms);
                     hash = parser.ParseHash();
                 }
-                using (var ms = new MemoryStream())
-                {
-                    hash.WriteTo(new GGBinaryWriter(new BinaryWriter(ms)));
-                    data = ms.ToArray();
-                }
+				using (var ms = new MemoryStream())
+				{
+                    using (var writer = new GGBinaryWriter(new BinaryWriter(ms)))
+                    {
+                        hash.WriteTo(writer);
+                    }
+					data = ms.ToArray();
+				}
             }
             GGBinaryReader.EncodeUnbreakableXor(data);
             _bw.Write(data);

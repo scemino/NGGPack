@@ -113,21 +113,20 @@ namespace NGGPack.Console
             }
 
             var ext = Path.GetExtension(entry.Name);
-            if (ext == ".wimpy")
+            if (ext == ".wimpy" || entry.Name.EndsWith("Animation.json", StringComparison.OrdinalIgnoreCase))
             {
-                var entryStream = _pack.GetEntryStream(entry.Name);
-                using (var reader = new GGBinaryReader(new BinaryReader(entryStream)))
+                var br = new BinaryReader(_pack.GetEntryStream(entry.Name));
+                using (var reader = new GGBinaryReader(br))
                 {
                     var values = reader.ReadDirectory();
                     System.Console.WriteLine(values);
                 }
+                return;
             }
-            else
-            {
-                var entryStream = _pack.GetEntryStream(entry.Name);
-                var text = new StreamReader(entryStream).ReadToEnd();
-                System.Console.WriteLine(text);
-            }
+
+            var entryStream = _pack.GetEntryStream(entry.Name);
+            var text = new StreamReader(entryStream).ReadToEnd();
+            System.Console.WriteLine(text);
         }
 
         public void Extract(List<string> cmdArgs)
@@ -138,7 +137,7 @@ namespace NGGPack.Console
                 if (!predicate(entry.Name)) continue;
 
                 var ext = Path.GetExtension(entry.Name);
-                if (ext == ".wimpy")
+                if (ext == ".wimpy" || entry.Name.EndsWith("Animation.json", StringComparison.OrdinalIgnoreCase))
                 {
                     var entryStream = _pack.GetEntryStream(entry.Name);
                     using (var reader = new GGBinaryReader(new BinaryReader(entryStream)))
